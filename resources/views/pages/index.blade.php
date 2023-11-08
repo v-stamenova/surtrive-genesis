@@ -32,9 +32,9 @@ name('home');
                 <h1 class="mt-5 text-4xl font-light leading-tight tracking-tight text-center dark:text-white text-slate-800 sm:text-5xl md:text-8xl">
                     Organize your<br> Third Year Plan.</h1>
                 <p class="w-full max-w-2xl mx-auto mt-8 text-lg dark:text-white/60 text-slate-500">The "I am second year in HZ" starter pack includes but not limited to: the stress pack <span class="italic">What am I doing for my
-                    <span class="text-red-700 dark:text-red-500 animate-pulse">minor</span> and <span class="text-red-700 dark:text-red-500 animate-pulse">internship</span></span>. Organize your favorites with Surtrive.
+                    <span class="text-red-700 dark:text-red-500 animate-pulse">minor</span> and <span class="text-red-700 dark:text-red-500 animate-pulse">internship</span></span>. Do yourself a favour - organize your favorites with Surtrive.
                 <div class="flex items-center justify-center w-full max-w-sm px-5 mx-auto mt-8 space-x-5">
-                    <x-ui.button type="primary" tag="a" href="https://github.com/thedevdojo/genesis" target="_blank">Try it yourself</x-ui.button>
+                    <x-ui.button type="primary" tag="a" href="{{Auth::user() ? route('dashboard') : route('register')}}">{{Auth::user() ? "Go to Your Dashboard" : "Try it yourself"}}</x-ui.button>
                 </div>
             </div>
         </div>
