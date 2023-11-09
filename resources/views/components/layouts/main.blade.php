@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <script src="/js/plugins/tooltip.js" defer></script>
+        <script src="/js/plugins/datepicker.js" defer></script>
         <!-- Used to add dark mode right away, adding here prevents any flicker -->
         <script>
             if (typeof(Storage) !== "undefined") {

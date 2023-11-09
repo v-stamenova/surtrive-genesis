@@ -13,7 +13,7 @@ name('home');
     <div class="relative flex flex-col items-center justify-center w-full h-auto overflow-hidden" x-cloak>
 
         <div
-            class="absolute top-0 left-0 w-5/12 ml-72 -translate-x-1/2 fill-current opacity-10 dark:opacity-5 text-slate-400">
+            class="absolute top-0 left-0 w-2/5 ml-56 -translate-x-1/2 fill-current opacity-10 dark:opacity-5 text-slate-400">
             <img src="img/front-page-penguin-left.png">
         </div>
 
