@@ -1,12 +1,15 @@
 <?php
 
+use App\Models\Minor;
 use function Laravel\Folio\{middleware, name};
 use function Livewire\Volt\{state, rules};
+use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
 
 name('minor.create');
 middleware(['auth', 'verified']);
 
-state(['name' => '',
+state(['university_name' => '',
     'country' => '',
     'city' => '',
     'specifics' => '',
@@ -18,7 +21,7 @@ state(['name' => '',
     'prerequisites' => '']);
 
 
-rules(['name' => 'required',
+rules(['university_name' => 'required',
     'country' => 'required',
     'city' => 'required',
     'specifics' => '',
@@ -26,8 +29,17 @@ rules(['name' => 'required',
     'semester_start' => 'date',
     'semester_end' => 'date',
     'lower_living_expense' => 'numeric',
-    'higher_living_expense' => 'numeric',
+    'higher_living_expense' => 'numeric|gt:lower_living_expense',
     'prerequisites' => '']);
+
+$createMinor = function () {
+    // Validate based on the rules above
+    $validated = $this->validate();
+
+    Minor::create($validated);
+
+    return $this->redirect(route('dashboard'), navigate: true);
+}
 ?>
 
 
@@ -49,7 +61,7 @@ rules(['name' => 'required',
             direction: 'forward',
         }"
 
-        x-init="$nextTick(() => {
+             x-init="$nextTick(() => {
             let typingInterval = setInterval(startTyping, $data.typeSpeed);
 
             function startTyping(){
@@ -90,7 +102,7 @@ rules(['name' => 'required',
                 }
             }
         })"
-        class="max-w-7xl">
+             class="max-w-7xl">
             <div class="relative flex h-6">
                 <p class="text-lg leading-tight text-gray-800 dark:text-gray-200" x-text="text"></p>
             </div>
@@ -107,28 +119,42 @@ rules(['name' => 'required',
                         <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100">{{ __('Minor Information') }}</h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Congrats on finding a minor that suits you. Add the necessary data so that you don't forget about it.") }}</p>
                     </header>
-                    <form class="mt-10 space-y-6">
+                    <form wire:submit="createMinor" class="mt-10 space-y-6">
                         <div class="grid grid-cols-2 gap-10">
                             <div class="space-y-3">
                                 <h3 class="text-md font-medium text-gray-900 dark:text-gray-100 pb-1">{{ __('University and course') }}</h3>
-                                <x-ui.input label="University Name" type="text" id="name" name="name" mandatory="true"  wire:model="name" />
-                                <x-ui.input label="Country" type="text" id="country" name="country" mandatory="true" wire:model="country" />
-                                <x-ui.input label="City" type="text" id="city" name="city" mandatory="true" wire:model="city" />
-                                <x-ui.textarea label="Specifics" additional_info="What courses you want to take? Is it a predefined minor? Add everything that pops to mind study related" type="text" id="specifics" name="specifics" wire:model="specifics" />
+                                <x-ui.input label="University Name" type="text" id="university_name" name="university_name" mandatory="university_name"
+                                            wire:model="university_name"/>
+                                <x-ui.input label="Country" type="text" id="country" name="country" mandatory="true"
+                                            wire:model="country"/>
+                                <x-ui.input label="City" type="text" id="city" name="city" mandatory="true"
+                                            wire:model="city"/>
+                                <x-ui.textarea label="Specifics"
+                                               additional_info="What courses you want to take? Is it a predefined minor? Add everything that pops to mind study related"
+                                               type="text" id="specifics" name="specifics" wire:model="specifics"/>
                                 <!-- TODO: Proper date picker -->
-                                <x-ui.input label="Starting date (approx)" type="date" id="semester_start" name="semester_start" wire:model="semester_start" />
-                                <x-ui.input label="Ending date (approx)" type="date" id="semester_end" name="semester_end" wire:model="semester_end" />
-                                <x-ui.textarea label="Prerequisites" type="text" id="prerequisites" name="prerequisites" wire:model="prerequisites" />
+                                <x-ui.input label="Starting date (approx)" type="date" id="semester_start"
+                                            name="semester_start" wire:model="semester_start"/>
+                                <x-ui.input label="Ending date (approx)" type="date" id="semester_end"
+                                            name="semester_end" wire:model="semester_end"/>
+                                <x-ui.textarea label="Prerequisites" type="text" id="prerequisites" name="prerequisites"
+                                               wire:model="prerequisites"/>
                             </div>
                             <div class="space-y-3 relative">
                                 <div
-                                    class="w-3/5 fill-current opacity-10 dark:opacity-5 text-slate-400">
-                                    <img src="../img/confused-penguin.png">
+                                    class="flex items-center justify-center fill-current opacity-10 dark:opacity-5 text-slate-400">
+                                    <img class="w-2/3" src="../img/confused-penguin.png">
                                 </div>
                                 <h3 class="text-md font-medium text-gray-900 dark:text-gray-100 pb-1">{{ __('Living situtaion') }}</h3>
-                                <x-ui.textarea label="Accommodation" additional_info="What is the situation with the accommodation for the uni?" type="text" id="accommodation" name="accommodation" wire:model="accommodation" />
-                                <x-ui.input label="Lower living expense border" type="number" id="lower_living_expense" name="lower_living_expense" wire:model="lower_living_expense" />
-                                <x-ui.input label="Higher living expense border" type="number" id="higher_living_expense" name="higher_living_expense" wire:model="higher_living_expense" />
+                                <x-ui.textarea label="Accommodation"
+                                               additional_info="What is the situation with the accommodation for the uni?"
+                                               type="text" id="accommodation" name="accommodation"
+                                               wire:model="accommodation"/>
+                                <x-ui.input label="Lower living expense border" type="number" id="lower_living_expense"
+                                            name="lower_living_expense" wire:model="lower_living_expense"/>
+                                <x-ui.input label="Higher living expense border" type="number"
+                                            id="higher_living_expense" name="higher_living_expense"
+                                            wire:model="higher_living_expense"/>
                                 <x-ui.button type="primary" submit="true">{{ __('Save minor') }}</x-ui.button>
                             </div>
                         </div>
