@@ -12,8 +12,6 @@ return new class extends Migration {
     {
         Schema::create('minors', function (Blueprint $table) {
             $table->id();
-            $table->string("university_name")->nullable(false);
-            $table->string("country")->nullable(false);
             $table->string("city")->nullable(false);
             $table->text('specifics')->comment('Additional data for the specifics of the programme')->nullable(true);
             // TODO: Redo the accommodation in possibly another table
