@@ -6,7 +6,7 @@ use function Livewire\Volt\{state, rules};
 name('home');
 
 state(['buttonLabel' => Auth::user() ? "Go to Your Dashboard" : "Try it yourself",
-    'buttonLink' => Auth::user() ? route('dashboard') : route('register')]);
+    'buttonRoute' => Auth::user() ? 'dashboard' : 'register']);
 
 ?>
 
@@ -37,7 +37,7 @@ state(['buttonLabel' => Auth::user() ? "Go to Your Dashboard" : "Try it yourself
                 <p class="w-full max-w-2xl mx-auto mt-8 text-lg dark:text-white/60 text-slate-500">The "I am second year in HZ" starter pack includes but not limited to: the stress pack <span class="italic">What am I doing for my
                     <span class="text-red-700 dark:text-red-500 animate-pulse">minor</span> and <span class="text-red-700 dark:text-red-500 animate-pulse">internship</span></span>. Do yourself a favour - organize your favorites with Surtrive.
                 <div class="flex items-center justify-center w-full max-w-sm px-5 mx-auto mt-8 space-x-5">
-                    <x-ui.button type="primary" tag="a" href="{{$buttonLink}}">{{$buttonLabel}}</x-ui.button>
+                    <x-ui.button type="primary" tag="a" href="{{route($buttonRoute)}}">{{$buttonLabel}}</x-ui.button>
                 </div>
             </div>
         </div>
