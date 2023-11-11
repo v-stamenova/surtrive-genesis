@@ -2,6 +2,7 @@
 
 use App\Models\Minor;
 use App\Models\University;
+use Illuminate\Support\Facades\Auth;
 use function Laravel\Folio\{middleware, name};
 use function Livewire\Volt\{state, rules, mount};
 use Illuminate\Validation\Rule;
@@ -19,7 +20,8 @@ state(['university_id' => '',
     'lower_living_expense' => '',
     'higher_living_expense' => '',
     'prerequisites' => '',
-    'items' => '']);
+    'items' => '',
+    'user_id' => fn() => Auth::user()->id]);
 
 
 rules(['university_id' => 'required',
@@ -30,7 +32,8 @@ rules(['university_id' => 'required',
     'semester_end' => 'date',
     'lower_living_expense' => 'numeric',
     'higher_living_expense' => 'numeric|gt:lower_living_expense',
-    'prerequisites' => '']);
+    'prerequisites' => '',
+    'user_id' => 'required|numeric']);
 
 mount(function () {
     $this->items = University::all()->map(function ($university) {
@@ -80,7 +83,8 @@ $createMinor = function () {
                                 <div>
                                     <x-ui.select :items="$items" label="University name" mandatory="true"
                                                  wire:model="university_id"/>
-                                    <livewire:create-university wire:loading.attr="disabled" wire:target="createUniversity" />
+                                    <livewire:create-university wire:loading.attr="disabled"
+                                                                wire:target="createUniversity"/>
                                 </div>
                                 <x-ui.input label="City" type="text" id="city" name="city" mandatory="true"
                                             wire:model="city"/>

@@ -22,8 +22,10 @@ return new class extends Migration {
             $table->decimal('lower_living_expense', 9, 3)->nullable(true);
             $table->decimal('higher_living_expense', 9, 3)->nullable(true);
             $table->text('prerequisites')->nullable(true);
+            $table->unsignedBigInteger('user_id');
 
             $table->foreign('university_id')->references('id')->on('universities');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
