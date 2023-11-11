@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\University;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class CreateUniversity extends Component
@@ -11,11 +12,22 @@ class CreateUniversity extends Component
 
     public $country;
 
+    public $items;
+
     protected $rules = [
         'name' => 'required|unique:universities',
         'country' => 'required',
     ];
 
+    public function mount()
+    {
+        $this->items = collect(json_decode(Http::get("https://restcountries.com/v3.1/all?fields=name")))->map(function ($item) {
+            return [
+                'value' => $item->name->common,
+                'text' => $item->name->common,
+            ];
+        })->sortBy('text');
+    }
 
     public function render()
     {

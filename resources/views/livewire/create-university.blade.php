@@ -41,8 +41,8 @@
                                         mandatory="true"
                                         wire:model="name"/>
                             <div class="pt-2">
-                                <x-ui.input label="Country" type="text" id="country" name="country" mandatory="true"
-                                            wire:model="country"/>
+                                <x-ui.select :items="$items" label="Country" mandatory="true"
+                                             wire:model="country"/>
                             </div>
                         </div>
                         <x-ui.button type="primary" @click="modalOpen=false" submit="true">Save</x-ui.button>
