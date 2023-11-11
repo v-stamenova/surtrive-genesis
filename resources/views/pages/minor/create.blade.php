@@ -1,16 +1,16 @@
 <?php
 
 use App\Models\Minor;
+use App\Models\University;
 use function Laravel\Folio\{middleware, name};
-use function Livewire\Volt\{state, rules};
+use function Livewire\Volt\{state, rules, mount};
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 name('minor.create');
 middleware(['auth', 'verified']);
 
-state(['university_name' => '',
-    'country' => '',
+state(['university_id' => '',
     'city' => '',
     'specifics' => '',
     'accommodation' => '',
@@ -18,11 +18,11 @@ state(['university_name' => '',
     'semester_end' => '',
     'lower_living_expense' => '',
     'higher_living_expense' => '',
-    'prerequisites' => '']);
+    'prerequisites' => '',
+    'items' => '']);
 
 
-rules(['university_name' => 'required',
-    'country' => 'required',
+rules(['university_id' => 'required',
     'city' => 'required',
     'specifics' => '',
     'accommodation' => '',
@@ -32,10 +32,19 @@ rules(['university_name' => 'required',
     'higher_living_expense' => 'numeric|gt:lower_living_expense',
     'prerequisites' => '']);
 
+mount(function () {
+    $this->items = University::all()->map(function ($university) {
+        return [
+            'value' => $university->id,
+            'text' => $university->name,
+        ];
+    });
+
+});
+
 $createMinor = function () {
     // Validate based on the rules above
     $validated = $this->validate();
-
     Minor::create($validated);
 
     return $this->redirect(route('dashboard'), navigate: true);
@@ -49,84 +58,30 @@ $createMinor = function () {
         <h2 class="text-2xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Add new potential minor') }}
         </h2>
-        <div x-data="{
-            text: '',
-            textArray : ['Found new hell?', 'It is never too late to drop out', ' 👁👄👁' ,'Do I really need this degree?', 'Should have stayed home', '👹', 'Mum, come pick me up I am scared'],
-            textIndex: 0,
-            charIndex: 0,
-            typeSpeed: 110,
-            cursorSpeed: 550,
-            pauseEnd: 2500,
-            pauseStart: 20,
-            direction: 'forward',
-        }"
-
-             x-init="$nextTick(() => {
-            let typingInterval = setInterval(startTyping, $data.typeSpeed);
-
-            function startTyping(){
-                let current = $data.textArray[ $data.textIndex ];
-
-                // check to see if we hit the end of the string
-                if($data.charIndex > current.length){
-                        $data.direction = 'backward';
-                        clearInterval(typingInterval);
-
-                        setTimeout(function(){
-                            typingInterval = setInterval(startTyping, $data.typeSpeed);
-                        }, $data.pauseEnd);
-                }
-
-                $data.text = current.substring(0, $data.charIndex);
-
-                if($data.direction == 'forward')
-                {
-                    $data.charIndex += 1;
-                }
-                else
-                {
-                    if($data.charIndex == 0)
-                    {
-                        $data.direction = 'forward';
-                        clearInterval(typingInterval);
-                        setTimeout(function(){
-                            $data.textIndex += 1;
-                            if($data.textIndex >= $data.textArray.length)
-                            {
-                                $data.textIndex = 0;
-                            }
-                            typingInterval = setInterval(startTyping, $data.typeSpeed);
-                        }, $data.pauseStart);
-                    }
-                    $data.charIndex -= 1;
-                }
-            }
-        })"
-             class="max-w-7xl">
-            <div class="relative flex h-6">
-                <p class="text-lg leading-tight text-gray-800 dark:text-gray-200" x-text="text"></p>
-            </div>
-        </div>
+        <h3 class="text-lg leading-tight text-gray-800 dark:text-gray-200">
+            {{ __('Save all data necessary found and needed for making a choice about your minor') }}
+        </h3>
     </x-slot>
 
     @volt('minor.create')
-    <div class="py-12">
+    <div class="py-7">
         <div class="mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
             <section
                 class="p-4 bg-white shadow sm:p-8 dark:bg-gray-800 sm:rounded-lg dark:bg-gray-900/50 dark:border dark:border-gray-200/10">
                 <div class="px-5">
-                    <header>
-                        <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100">{{ __('Minor Information') }}</h2>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Congrats on finding a minor that suits you. Add the necessary data so that you don't forget about it.") }}</p>
-                    </header>
-                    <form wire:submit="createMinor" class="mt-10 space-y-6">
+                    <form wire:submit="createMinor" class="space-y-6">
                         <div class="grid grid-cols-2 gap-10">
                             <div class="space-y-3">
-                                <h3 class="text-md font-medium text-gray-900 dark:text-gray-100 pb-1">{{ __('University and course') }}</h3>
-                                <x-ui.input label="University Name" type="text" id="university_name" name="university_name" mandatory="university_name"
-                                            wire:model="university_name"/>
-                                <x-ui.input label="Country" type="text" id="country" name="country" mandatory="true"
-                                            wire:model="country"/>
+                                <header class="pb-2">
+                                    <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100">{{ __('Minor Information') }}</h2>
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Good job on finding a minor that suits you") }}</p>
+                                </header>
+                                <h3 class="text-md font-medium text-gray-900 dark:text-gray-100">{{ __('University and course') }}</h3>
+                                <div>
+                                    <x-ui.select :items="$items" label="University name" mandatory="true"
+                                                 wire:model="university_id"/>
+                                    <livewire:create-university wire:loading.attr="disabled" wire:target="createUniversity" />
+                                </div>
                                 <x-ui.input label="City" type="text" id="city" name="city" mandatory="true"
                                             wire:model="city"/>
                                 <x-ui.textarea label="Specifics"
@@ -137,20 +92,22 @@ $createMinor = function () {
                                             name="semester_start" wire:model="semester_start"/>
                                 <x-ui.input label="Ending date (approx)" type="date" id="semester_end"
                                             name="semester_end" wire:model="semester_end"/>
-                                <x-ui.textarea label="Prerequisites" type="text" id="prerequisites" name="prerequisites"
+                                <x-ui.textarea label="Prerequisites" type="text" id="prerequisites"
+                                               name="prerequisites"
                                                wire:model="prerequisites"/>
                             </div>
-                            <div class="space-y-3 relative">
+                            <div class="space-y-2 relative">
                                 <div
                                     class="flex items-center justify-center fill-current opacity-10 dark:opacity-5 text-slate-400">
-                                    <img class="w-2/3" src="../img/confused-penguin.png">
+                                    <img class="w-[70%]" src="../img/confused-penguin.png">
                                 </div>
                                 <h3 class="text-md font-medium text-gray-900 dark:text-gray-100 pb-1">{{ __('Living situtaion') }}</h3>
                                 <x-ui.textarea label="Accommodation"
                                                additional_info="What is the situation with the accommodation for the uni?"
                                                type="text" id="accommodation" name="accommodation"
                                                wire:model="accommodation"/>
-                                <x-ui.input label="Lower living expense border" type="number" id="lower_living_expense"
+                                <x-ui.input label="Lower living expense border" type="number"
+                                            id="lower_living_expense"
                                             name="lower_living_expense" wire:model="lower_living_expense"/>
                                 <x-ui.input label="Higher living expense border" type="number"
                                             id="higher_living_expense" name="higher_living_expense"

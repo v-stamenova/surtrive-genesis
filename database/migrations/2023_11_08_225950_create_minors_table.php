@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('minors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('university_id');
             $table->string("city")->nullable(false);
             $table->text('specifics')->comment('Additional data for the specifics of the programme')->nullable(true);
             // TODO: Redo the accommodation in possibly another table
@@ -21,6 +22,8 @@ return new class extends Migration {
             $table->decimal('lower_living_expense', 9, 3)->nullable(true);
             $table->decimal('higher_living_expense', 9, 3)->nullable(true);
             $table->text('prerequisites')->nullable(true);
+
+            $table->foreign('university_id')->references('id')->on('universities');
             $table->timestamps();
         });
     }

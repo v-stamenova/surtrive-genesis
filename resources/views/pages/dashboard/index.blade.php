@@ -27,6 +27,7 @@ middleware(['auth', 'verified']);
                     <img src="img/waving-penguin.png">
                 </div>
                 <div>
+                    <a href="{{route('minor.create')}}" wire:navigate>Link to minor</a>
                     Under construction :)
                 </div>
             </div>
