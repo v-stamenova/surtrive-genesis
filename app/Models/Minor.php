@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Minor extends Model
 {
@@ -20,5 +21,14 @@ class Minor extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Establishes connection with the university model
+     * @return BelongsTo
+     */
+    public function university()
+    {
+        return $this->belongsTo(University::class);
     }
 }

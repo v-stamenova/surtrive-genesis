@@ -1,11 +1,26 @@
 <?php
 
+use App\Models\Minor;
+use App\Models\University;
 use function Laravel\Folio\{middleware, name};
 use function Livewire\Volt\{state, mount};
+use Illuminate\Support\Facades\Auth;
 
 name('dashboard');
 middleware(['auth', 'verified']);
 
+state([
+    'lastMinors' => '',
+    'lastUniversities' => ''
+]);
+
+mount(function () {
+    $this->lastMinors = Auth::user()->minors()->orderBy('created_at', 'desc')
+        ->take(Auth::user()->minors->count() < 3 ? Auth::user()->minors->count() : 3)->get();
+
+    $this->lastUniversities = University::orderBy('created_at', 'desc')
+        ->take(University::all()->count() < 3 ? University::all()->count() : 3)->get();
+});
 ?>
 
 <x-layouts.app>
@@ -31,47 +46,68 @@ middleware(['auth', 'verified']);
                 <div class="sm:col-span-2">
                     <section
                         class="p-4 h-full bg-white shadow sm:p-8 dark:bg-gray-800 sm:rounded-lg dark:bg-gray-900/50 dark:border dark:border-gray-200/10">
-                        <div>
-                            <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100 pb-2">{{ __('Last minors added by youg') }}</h2>
+                        <div class="pb-10">
+                            <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100 pb-2">{{ __('Last minors added by you') }}</h2>
                             <div x-data="{
                                 activeAccordion: '',
                                 setActiveAccordion(id) {
                                     this.activeAccordion = (this.activeAccordion == id) ? '' : id
                                 }
-                            }" class="relative w-full mx-auto overflow-hidden text-sm font-normal bg-white border border-gray-200 divide-y divide-gray-200 rounded-md">
-                                <div x-data="{ id: $id('accordion') }" class="cursor-pointer group">
-                                    <button @click="setActiveAccordion(id)" class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
-                                        <span>What is Pines?</span>
-                                        <svg class="w-4 h-4 duration-200 ease-out" :class="{ 'rotate-180': activeAccordion==id }" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-                                    <div x-show="activeAccordion==id" x-collapse x-cloak>
-                                        <div class="p-4 pt-0 opacity-70">
-                                            Pines is a UI library built for AlpineJS and TailwindCSS.
+                            }"
+                                 class="relative w-full mx-auto overflow-hidden text-sm font-normal bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 dark:text-gray-100 divide-y divide-gray-200 rounded-md">
+                                @foreach($lastMinors as $minor)
+                                    <div x-data="{ id: $id('accordion') }" class="cursor-pointer group">
+                                        <button @click="setActiveAccordion(id)"
+                                                class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
+                                            <span>Minor at {{$minor->university->name}}</span>
+                                            <svg class="w-4 h-4 duration-200 ease-out"
+                                                 :class="{ 'rotate-180': activeAccordion==id }" viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div x-show="activeAccordion==id" x-collapse x-cloak>
+                                            <div class="p-4 pt-0 opacity-70 cursor-default">
+                                                The minor at {{$minor->university->name}} takes place
+                                                in {{$minor->city}}, {{$minor->university->name}}. Check your notes
+                                                <a wire:navigate class="underline font-bold" href="{{route('minors.show', ['minor' => $minor])}}">over here</a>.
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div x-data="{ id: $id('accordion') }" class="cursor-pointer group">
-                                    <button @click="setActiveAccordion(id)" class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
-                                        <span>How do I install Pines?</span>
-                                        <svg class="w-4 h-4 duration-200 ease-out" :class="{ 'rotate-180': activeAccordion==id }" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-                                    <div x-show="activeAccordion==id" x-collapse x-cloak>
-                                        <div class="p-4 pt-0 opacity-70">
-                                            Add AlpineJS and TailwindCSS to your page and then copy and paste any of these elements into your project.
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100">{{ __('Last universities added') }}</h2>
+                            <h3 class="text-md italic text-gray-900 dark:text-gray-100 pb-2">{{ __('Maybe the other users are onto something? You may want to check them out') }}</h3>
+                            <div x-data="{
+                                activeAccordion: '',
+                                setActiveAccordion(id) {
+                                    this.activeAccordion = (this.activeAccordion == id) ? '' : id
+                                }
+                            }"
+                                 class="relative w-full mx-auto overflow-hidden text-sm font-normal bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 dark:text-gray-100 divide-y divide-gray-200 rounded-md">
+                                @foreach($lastUniversities as $university)
+                                    <div x-data="{ id: $id('accordion') }" class="cursor-pointer group">
+                                        <button @click="setActiveAccordion(id)"
+                                                class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
+                                            <span>{{$university->name}}</span>
+                                            <svg class="w-4 h-4 duration-200 ease-out"
+                                                 :class="{ 'rotate-180': activeAccordion==id }" viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div x-show="activeAccordion==id" x-collapse x-cloak>
+                                            <div class="p-4 pt-0 opacity-70 cursor-default">
+                                                This university is in {{$university->country}}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div x-data="{ id: $id('accordion') }" class="cursor-pointer group">
-                                    <button @click="setActiveAccordion(id)" class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
-                                        <span>Can I use Pines with other libraries or frameworks?</span>
-                                        <svg class="w-4 h-4 duration-200 ease-out" :class="{ 'rotate-180': activeAccordion==id }" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-                                    <div x-show="activeAccordion==id" x-collapse x-cloak>
-                                        <div class="p-4 pt-0 opacity-70">
-                                            Absolutely! Pines works with any other library or framework. Pines works especially well with the TALL stack.
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </section>

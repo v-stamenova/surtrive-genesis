@@ -40,7 +40,7 @@ class CreateUniversity extends Component
 
         University::create($validated);
 
-        $this->redirect(route('minor.create'), navigate: true);
+        $this->redirect(route('minors.create'), navigate: true);
     }
 
 }

@@ -8,7 +8,7 @@ use function Livewire\Volt\{state, rules, mount};
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
-name('minor.create');
+name('minors.create');
 middleware(['auth', 'verified']);
 
 state(['university_id' => '',
@@ -66,7 +66,7 @@ $createMinor = function () {
         </h3>
     </x-slot>
 
-    @volt('minor.create')
+    @volt('minors.create')
     <div class="py-7">
         <div class="mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
             <section
