@@ -2,7 +2,7 @@
      @keydown.escape.window="modalOpen = false"
      class="relative z-50 w-auto h-auto">
     <p @click="modalOpen=true"
-       class="text-xs underline transition-colors cursor-pointer pt-1 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
+       class="text-xs dark:text-gray-400 underline transition-colors cursor-pointer pt-1 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
         The university is missing? Click here</p>
     <template x-teleport="body">
         <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen"

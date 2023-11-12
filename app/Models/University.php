@@ -21,4 +21,11 @@ class University extends Model
     {
         return $this->hasMany(Minor::class);
     }
+
+    public static function chosenFromUsersByProgramme(Programme $programme)
+    {
+        return self::whereHas('minors.user.programme', function ($query) use ($programme) {
+            $query->where('programme_id', $programme->id);
+        })->get();
+    }
 }
