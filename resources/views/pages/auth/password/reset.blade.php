@@ -31,8 +31,10 @@ $sendResetPasswordLink = function(){
     <div class="flex flex-col items-stretch justify-center w-screen min-h-screen py-10 sm:items-center">
 
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <x-ui.link href="{{ route('home') }}">
-                <x-ui.logo class="w-auto h-10 mx-auto text-gray-700 fill-current dark:text-gray-100" />
+            <x-ui.link wire:navigate class="flex items-center justify-center " href="{{ route('home') }}">
+                <div class="fill-current w-36 opacity-80 dark:opacity-60">
+                    <img src="/img/logo.png">
+                </div>
             </x-ui.link>
 
             <h2 class="mt-5 text-2xl font-extrabold leading-9 text-center text-gray-800 dark:text-gray-200">
@@ -72,7 +74,7 @@ $sendResetPasswordLink = function(){
                 </div>
             </div>
         @endvolt
-        
+
     </div>
 
 </x-layouts.main>

@@ -18,7 +18,7 @@ $authenticate = function(){
 
         return;
     }
-    
+
     event(new Login(auth()->guard('web'), User::where('email', $this->email)->first(), $this->remember));
 
     return redirect()->intended('/');
@@ -31,8 +31,10 @@ $authenticate = function(){
     <div class="flex flex-col items-stretch justify-center w-screen min-h-screen py-10 sm:items-center">
 
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <x-ui.link href="{{ route('home') }}">
-                <x-ui.logo class="w-auto h-10 mx-auto text-gray-700 fill-current dark:text-gray-100" />
+            <x-ui.link wire:navigate class="flex items-center justify-center " href="{{ route('home') }}">
+                <div class="fill-current w-36 opacity-80 dark:opacity-60">
+                    <img src="/img/logo.png">
+                </div>
             </x-ui.link>
 
             <h2 class="mt-5 text-2xl font-extrabold leading-9 text-center text-gray-800 dark:text-gray-200">Sign in to your account</h2>
@@ -46,7 +48,7 @@ $authenticate = function(){
             <div class="px-10 py-0 sm:py-8 sm:shadow-sm sm:bg-white dark:sm:bg-gray-950/50 dark:border-gray-200/10 sm:border sm:rounded-lg border-gray-200/60">
                 @volt('auth.login')
                     <form wire:submit="authenticate" class="space-y-6">
-                        
+
                         <x-ui.input label="Email address" type="email" id="email" name="email" wire:model="email" />
                         <x-ui.input label="Password" type="password" id="password" name="password" wire:model="password" />
 
@@ -60,7 +62,7 @@ $authenticate = function(){
                 @endvolt
             </div>
         </div>
-        
+
     </div>
 
 </x-layouts.main>
