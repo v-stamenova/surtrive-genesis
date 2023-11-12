@@ -13,13 +13,22 @@ state(['user' => auth()->user()])->locked();
 <x-layouts.app>
 
     <x-slot name="header">
-        <h2 class="text-2xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Your minors') }}
-        </h2>
-        <h3 class="text-lg leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Save all data necessary found and needed for making a choice about your minor') }}
-        </h3>
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    {{ __('Your minors') }}
+                </h2>
+                <h3 class="text-lg leading-tight text-gray-800 dark:text-gray-200">
+                    {{ __('Save all data necessary found and needed for making a choice about your minor') }}
+                </h3>
+            </div>
+            <div>
+                {{-- Your button goes here --}}
+                <a wire:navigate href="{{route('minors.create')}}" class="dark:bg-sky-500 dark:hover:bg-sky-700 bg-sky-700 hover:bg-sky-900 text-white text-lg px-4 py-2 rounded-full">Add new minor</a>
+            </div>
+        </div>
     </x-slot>
+
 
     @volt('minors.index')
     <div class="py-7">
@@ -42,7 +51,7 @@ state(['user' => auth()->user()])->locked();
                                                 class="relative w-full mx-auto overflow-hidden text-sm font-normal bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 dark:text-gray-100 divide-y divide-gray-200 rounded-md">
                                                 <a wire:navigate href="{{route('minors.show', ['minor' => $minor])}}"
                                                    class="flex items-center justify-between w-full p-4 text-left select-none group-hover:underline">
-                                                    Minor at a {{$minor->university->name}}
+                                                    Minor at {{$minor->university->name}}
                                                 </a>
                                             </div>
                                         </div>
