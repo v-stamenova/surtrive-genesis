@@ -1,17 +1,27 @@
 <?php
 
+use App\Models\Programme;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
 use function Laravel\Folio\{middleware, name};
-use function Livewire\Volt\{state, rules};
+use function Livewire\Volt\{state, rules, mount};
 
 middleware(['guest']);
-state(['name' => '', 'email' => '', 'password' => '', 'passwordConfirmation' => '']);
-rules(['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required|min:8|same:passwordConfirmation']);
+state(['name' => '', 'email' => '', 'password' => '', 'passwordConfirmation' => '', 'programme_id' => '', 'items' => '']);
+rules(['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required|min:8|same:passwordConfirmation', 'programme_id' => 'required']);
 name('register');
+
+mount(function () {
+    $this->items = Programme::all()->map(function ($programme) {
+        return [
+            'value' => $programme->id,
+            'text' => $programme->name
+        ];
+    });
+});
 
 $register = function () {
     $this->validate();
@@ -20,6 +30,7 @@ $register = function () {
         'email' => $this->email,
         'name' => $this->name,
         'password' => Hash::make($this->password),
+        'programme_id' => $this->programme_id
     ]);
 
     event(new Registered($user));
@@ -42,14 +53,14 @@ $register = function () {
                 </div>
             </x-ui.link>
             <h2 class=" text-2xl font-extrabold leading-9 text-center text-gray-800 dark:text-gray-200">Create a new
-                                                                                                            account</h2>
+                                                                                                        account</h2>
             <div class="text-sm leading-5 text-center text-gray-600 dark:text-gray-400 space-x-0.5">
                 <span>Or</span>
                 <x-ui.text-link href="{{ route('login') }}">sign in to your account</x-ui.text-link>
             </div>
         </div>
 
-        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md overflow-x-hidden">
             <div
                 class="px-10 py-0 sm:py-8 sm:shadow-sm sm:bg-white dark:sm:bg-gray-950/50 dark:border-gray-200/10 sm:border sm:rounded-lg border-gray-200/60">
                 @volt('auth.register')
@@ -59,6 +70,7 @@ $register = function () {
                     <x-ui.input label="Password" type="password" id="password" name="password" wire:model="password"/>
                     <x-ui.input label="Confirm Password" type="password" id="password_confirmation"
                                 name="password_confirmation" wire:model="passwordConfirmation"/>
+                    <x-ui.select :items="$items" label="Programme" wire:model="programme_id"/>
                     <x-ui.button type="primary" rounded="md" submit="true">Register</x-ui.button>
                 </form>
                 @endvolt

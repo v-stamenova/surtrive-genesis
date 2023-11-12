@@ -20,11 +20,18 @@
             data-model="{{ $wireModel }}"
             {{ $attributes->whereStartsWith('wire:model') }} class="text-sm w-full mt-1.5 rounded-md shadow-sm dark:text-gray-300
              border-gray-300 dark:bg-white/[4%] dark:border-white/10 dark:focus:border-gray-700 dark:focus:ring-white/20 dark:placeholder-gray-400">
-        @forelse($items as $item)
-            <option value="{{$item['value']}}">{{$item['text']}}</option>
-        @empty
-            <option>No available university</option>
-        @endforelse
+        @if(empty($items))
+            <option>No data available</option>
+        @else
+            @foreach($items as $index => $item)
+                @if($index == 0)
+                    <option selected value="{{ $item['value'] }}" data-index="{{ $index }}">{{ $item['text'] }}</option>
+                    {{ $wireModel = $item['value'] }}
+                @else
+                    <option value="{{ $item['value'] }}" data-index="{{ $index }}">{{ $item['text'] }}</option>
+                @endif
+            @endforeach
+        @endif
     </select>
 
     @error($wireModel)

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'programme_id'
     ];
 
     /**
@@ -46,11 +47,20 @@ class User extends Authenticatable
     ];
 
     /**
-     * Establishes connection with the minor model
+     * Establishes relationship with the minor model
      * @return HasMany
      */
     public function minors(): HasMany
     {
         return $this->hasMany(Minor::class);
+    }
+
+    /**
+     * Establishes connection with the programme model
+     * @return BelongsTo
+     */
+    public function programme(): BelongsTo
+    {
+        return $this->belongsTo(Programme::class);
     }
 }
