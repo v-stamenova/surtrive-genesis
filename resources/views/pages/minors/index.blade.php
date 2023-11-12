@@ -19,7 +19,7 @@ state(['user' => auth()->user()])->locked();
                     {{ __('Your minors') }}
                 </h2>
                 <h3 class="text-lg leading-tight text-gray-800 dark:text-gray-200">
-                    {{ __('Save all data necessary found and needed for making a choice about your minor') }}
+                    {{ __('This is all minors you have left notes on') }}
                 </h3>
             </div>
             <div>
