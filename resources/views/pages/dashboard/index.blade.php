@@ -50,7 +50,8 @@ mount(function () {
                         <div class="pb-10">
                             <div class="flex justify-between">
                                 <h2 class="text-xl font-medium text-gray-900 dark:text-gray-100 pb-2">{{ __('Last minors added by you') }}</h2>
-                                <a wire:navigate href="{{ route('minors.create') }}" class="text-sky-700 dark:text-sky-500 hover:text-sky-900 dark:hover:text-sky-700 underline">{{ __('Add a Minor') }}</a>
+                                <a wire:navigate href="{{ route('minors.create') }}"
+                                   class="text-sky-700 dark:text-sky-500 hover:text-sky-900 dark:hover:text-sky-700 underline">{{ __('Add a Minor') }}</a>
                             </div>
 
                             <div x-data="{
@@ -83,7 +84,9 @@ mount(function () {
                                     </div>
                                 @empty
                                     <div class="px-2 py-3">You haven't added any minors yet,
-                                        <a href="{{route('minors.create')}}" wire:navigate class="underline hover:text-sky-800 dark:hover:text-sky-400">time to change that?</a>
+                                        <a href="{{route('minors.create')}}" wire:navigate
+                                           class="underline hover:text-sky-800 dark:hover:text-sky-400">time to change
+                                                                                                        that?</a>
                                     </div>
                                 @endforelse
                             </div>
