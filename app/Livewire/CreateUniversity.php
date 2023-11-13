@@ -27,6 +27,8 @@ class CreateUniversity extends Component
                 'text' => $item->name->common,
             ];
         })->sortBy('text');
+
+        $this->country = $this->items[0]['value'];
     }
 
     public function render()

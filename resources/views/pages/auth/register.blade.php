@@ -21,6 +21,8 @@ mount(function () {
             'text' => $programme->name
         ];
     });
+
+    $this->programme_id = $this->items[0]['value'];
 });
 
 $register = function () {

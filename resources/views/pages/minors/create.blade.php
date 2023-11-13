@@ -20,8 +20,9 @@ state(['university_id' => '',
     'lower_living_expense' => '',
     'higher_living_expense' => '',
     'prerequisites' => '',
-    'items' => '',
-    'user_id' => fn() => Auth::user()->id]);
+    'items' => '']);
+
+state(['user_id' => fn() => Auth::user()->id])->locked();
 
 
 rules(['university_id' => 'required',
@@ -29,7 +30,7 @@ rules(['university_id' => 'required',
     'specifics' => '',
     'accommodation' => '',
     'semester_start' => 'date',
-    'semester_end' => 'date',
+    'semester_end' => 'date|after:semester_start',
     'lower_living_expense' => 'numeric',
     'higher_living_expense' => 'numeric|gt:lower_living_expense',
     'prerequisites' => '',
@@ -43,6 +44,7 @@ mount(function () {
         ];
     });
 
+    $this->university_id = $this->items[0]['value'];
 });
 
 $createMinor = function () {

@@ -26,7 +26,6 @@
             @foreach($items as $index => $item)
                 @if($index == 0)
                     <option selected value="{{ $item['value'] }}" data-index="{{ $index }}">{{ $item['text'] }}</option>
-                    {{ $wireModel = $item['value'] }}
                 @else
                     <option value="{{ $item['value'] }}" data-index="{{ $index }}">{{ $item['text'] }}</option>
                 @endif
